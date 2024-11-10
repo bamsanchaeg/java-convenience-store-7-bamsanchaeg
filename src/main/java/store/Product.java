@@ -15,7 +15,7 @@ public class Product {
         this.promotionStock = promotionStock;
         this.promotion = Promotion.getPromotionByType(promotionType);
     }
-    
+
     // 상품 이름 getter
     public String getName() {
         return name;
