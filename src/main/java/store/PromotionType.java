@@ -1,12 +1,68 @@
 package store;
 
-public enum PromotionType {
+public enum PromotionType implements PromotionCalculator {
 
-    NONE(""),
-    MD_RECOMMENDATION("MD추천상품"),
-    BUY_2_GET_1("탄산2+1"),
-    BUY_1_GET_1("1_1"),
-    FLASH_SALE("반짝할인");
+    NONE("") {
+        @Override
+        public int calculateBonusQuantity(int remainingQuantity) {
+            return 0;
+        }
+
+        @Override
+        public int calculatePromotionReduction(int remainingQuantity, int bonusQuantity) {
+            return 0;
+        }
+    },
+    MD_RECOMMENDATION("MD추천상품") {
+        @Override
+        public int calculateBonusQuantity(int remainingQuantity) {
+            return 0;
+        }
+
+        @Override
+        public int calculatePromotionReduction(int remainingQuantity, int bonusQuantity) {
+            return remainingQuantity;
+        }
+    },
+    BUY_2_GET_1("탄산2+1") {
+        @Override
+        public int calculateBonusQuantity(int remainingQuantity) {
+            int triggeredQuantity = 2;
+            int bonusQuantity = 1;
+            return (remainingQuantity / triggeredQuantity) * bonusQuantity;
+        }
+
+        @Override
+        public int calculatePromotionReduction(int remainingQuantity, int bonusQuantity) {
+            int promoSets = remainingQuantity / 2;
+            return promoSets * (2 + bonusQuantity); //2구매 시 1 추가
+        }
+    },
+    BUY_1_GET_1("1_1") {
+        @Override
+        public int calculateBonusQuantity(int remainingQuantity) {
+            int triggeredQuantity = 2;
+            int bonusQuantity = 1;
+            return (remainingQuantity / triggeredQuantity) * bonusQuantity;
+        }
+
+        @Override
+        public int calculatePromotionReduction(int remainingQuantity, int bonusQuantity) {
+            int applicablePairs = remainingQuantity / 2;
+            return applicablePairs * 2;
+        }
+    },
+    FLASH_SALE("반짝할인") {
+        @Override
+        public int calculateBonusQuantity(int remainingQuantity) {
+            return 0;
+        }
+
+        @Override
+        public int calculatePromotionReduction(int remainingQuantity, int bonusQuantity) {
+            return remainingQuantity;
+        }
+    };
 
     private final String displayName;
 
@@ -26,4 +82,5 @@ public enum PromotionType {
         }
         return null; // 찾지 못한 경우
     }
+
 }
