@@ -40,7 +40,22 @@ public class Promotion {
     public LocalDate getEndDate() {
         return this.endDate;
     }
-    
+
+    public static Promotion getPromotionByType(PromotionType type) {
+        return PromotionLoader.getDefaultPromotions().stream()
+                .filter(promotion -> promotion.getType() == type)
+                .findFirst()
+                .orElse(null);
+    }
+
+    //해결하지 못함
+    public boolean isActive() {
+        LocalDateTime datetime = DateTimes.now();
+        LocalDate today = LocalDate.now();
+        return (today.isEqual(startDate) || today.isAfter(startDate)) &&
+                (today.isEqual(endDate) || today.isBefore(endDate));
+    }
+
 
 
 }
