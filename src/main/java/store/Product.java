@@ -89,4 +89,11 @@ public class Product {
     }
 
 
+    @Override
+    public String toString() {
+        String promotionText = promotion != null ? promotion.getType().toString() : "없음";
+        return String.format("%s %,.0f원 %d개 %s", name, price, regularStock, promotionStock, promotionText);
+    }
+
+
 }
