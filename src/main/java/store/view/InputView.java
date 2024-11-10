@@ -77,7 +77,22 @@ public class InputView {
         }
     }
 
+    public int readQuantity() {
+        int quantity;
+        do {
+            quantity = validateInt(Console.readLine());
+        } while (quantity == -1); // 유효한 숫자가 입력될 때까지 반복
+        return quantity;
+    }
 
+    public int validateInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("[ERROR] 숫자가 아닌 값이 입력되었습니다. 다시 입력해 주세요.");
+            return -1; // 잘못된 값을 의미하는 숫자를 반환
+        }
+    }
 
 
 

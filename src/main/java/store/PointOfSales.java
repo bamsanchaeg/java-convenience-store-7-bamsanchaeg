@@ -20,16 +20,15 @@ public class PointOfSales {
     }
 
     private List<Integer> processProductPurchase(Product product, int requestedQuantity, InputView inputView) {
-        int remainingQuantity = validateAndAdjustStock(product, requestedQuantity);
+        int remainingQuantity = validateAndAdjustStock(product, requestedQuantity, inputView);
         remainingQuantity = handlePromotion(product, remainingQuantity, inputView);
         return finalizePurchase(product, remainingQuantity);
     }
 
     //재고초과 확인 및 조정
-    private int validateAndAdjustStock(Product product, int requestedQuantity) {
+    private int validateAndAdjustStock(Product product, int requestedQuantity,InputView inputView) {
         int totalAvailableStock = product.getRegularStock() + product.getPromotionStock();
-        validateOverStock(requestedQuantity, totalAvailableStock);
-        return requestedQuantity;
+        return validateAndRetryOverStock(requestedQuantity, totalAvailableStock, inputView);
     }
 
     private List<Integer> finalizePurchase(Product product, int remainingQuantity) {
@@ -62,10 +61,20 @@ public class PointOfSales {
         return InputView.confirmUserInput();
     }
 
-    private void validateOverStock(int remainQuantity, int totalAvailableStock) {
-        if (remainQuantity > totalAvailableStock) {
+    private int validateAndRetryOverStock(int requestedQuantity, int totalAvailableStock, InputView inputView) {
+        int remainQuantity = requestedQuantity;
+
+        while (remainQuantity > totalAvailableStock) {
             System.out.println("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            System.out.println("구매하실 수량을 다시 입력해 주세요:");
+            try {
+                remainQuantity = inputView.readQuantity(); // 새로운 수량 입력 받기
+            } catch (NumberFormatException e) {
+                System.out.println("[ERROR] 잘못된 입력입니다. 숫자를 입력해 주세요.");
+                remainQuantity = totalAvailableStock + 1; // 강제로 반복
+            }
         }
+        return remainQuantity;
     }
 
     private boolean isValidatePromotion(Product product) {
