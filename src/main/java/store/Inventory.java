@@ -38,10 +38,15 @@ public class Inventory {
 
     // 상품명을 입력받아 해당 상품을 반환하는 메서드
     public static Product findProductByName(String productName) {
-        return products.stream()
-                .filter(product -> product.getName().equals(productName))
+        Product product = products.stream()
+                .filter(p -> p.getName().equals(productName))
                 .findFirst()
                 .orElse(null);
+
+        if (product == null) {
+            System.out.println("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+        }
+        return product;
     }
 
     public List<Product> getProducts() {

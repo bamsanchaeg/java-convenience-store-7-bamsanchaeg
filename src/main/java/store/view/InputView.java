@@ -1,9 +1,12 @@
 package store.view;
 
+import static store.Inventory.findProductByName;
+
 import camp.nextstep.edu.missionutils.Console;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
+import store.Product;
 import store.view.input.ConsoleReader;
 import store.view.input.Reader;
 import store.view.output.ConsoleWriter;
@@ -32,7 +35,6 @@ public class InputView {
         return validateAndParsePurchaseRequest(userInput);
     }
 
-
     // 사용자 입력 확인 메서드
     public static boolean confirmUserInput() {
         while (true) {
@@ -44,36 +46,6 @@ public class InputView {
                 return false;
             }
             System.out.println("[ERROR] 잘못된 입력입니다. Y 또는 N으로 응답해 주세요.");
-        }
-    }
-
-    private Map<String, Integer> validateAndParsePurchaseRequest(String input) {
-        while (true) {
-            try {
-                return parsePurchaseRequest(input);  // 유효한 입력이면 결과를 반환
-            } catch (IllegalArgumentException e) {
-                System.out.println("[ERROR] 잘못된 입력 형식입니다. 올바른 형식으로 다시 입력해 주세요.");
-                input = Console.readLine();  // 재입력 요청
-            }
-        }
-    }
-
-    private Map<String, Integer> parsePurchaseRequest(String purchaseRequest) {
-        try {
-            return Arrays.stream(purchaseRequest.replaceAll("[\\[\\]]", "").split(","))
-                    .map(item -> {
-                        String[] parts = item.split("-");
-                        if (parts.length != 2) {
-                            throw new IllegalArgumentException("잘못된 입력 형식입니다: " + item);
-                        }
-                        return parts;
-                    })
-                    .collect(Collectors.toMap(
-                            parts -> parts[0],
-                            parts -> Integer.parseInt(parts[1])
-                    ));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("수량은 숫자여야 합니다.", e);
         }
     }
 
@@ -94,6 +66,49 @@ public class InputView {
         }
     }
 
+    private Map<String, Integer> validateAndParsePurchaseRequest(String input) {
+        while (true) {
+            try {
+                return parsePurchaseRequest(input);  // 유효한 입력이면 결과를 반환
+            } catch (IllegalArgumentException e) {
+                System.out.println("[ERROR] 잘못된 입력 형식입니다. 올바른 형식으로 다시 입력해 주세요.");
+                input = Console.readLine();  // 재입력 요청
+            }
+        }
+    }
+
+    // 입력된 문자열을 파싱하여 구매 요청을 처리하는 메서드
+    private Map<String, Integer> parsePurchaseRequest(String purchaseRequest) {
+        try {
+            return Arrays.stream(purchaseRequest.replaceAll("[\\[\\]]", "").split(","))
+                    .map(item -> item.split("-"))
+                    .collect(Collectors.toMap(
+                            parts -> validateProductName(parts[0]),
+                            parts -> validateQuantity(parts[1])
+                    ));
+        } catch (Exception e) {
+            System.out.println("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+            return purchaseProduct(); // 재귀 호출을 통해 다시 입력받기
+        }
+    }
+
+    // 상품명이 존재하는지 검증
+    private static String validateProductName(String productName) {
+        Product product = findProductByName(productName.trim());
+        if (product == null) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+        }
+        return productName.trim();
+    }
+
+    // 입력된 수량이 재고 수량을 초과하지 않는지 검증
+    private static int validateQuantity(String quantityStr) {
+        int quantity = Integer.parseInt(quantityStr.trim());
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.");
+        }
+        return quantity;
+    }
 
 
 }
