@@ -6,15 +6,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import store.view.input.ConsoleReader;
 import store.view.input.Reader;
+import store.view.output.ConsoleWriter;
+import store.view.output.Writer;
 
 public class InputView {
 
     private static final Reader DEFAULT_READER = new ConsoleReader();
+    private static final Writer DEFAULT_WRITER = new ConsoleWriter();
 
     private final Reader reader;
+    private final Writer writer;
 
-    public InputView(Reader reader) {
+    public InputView(Reader reader, Writer writer) {
         this.reader = reader;
+        this.writer = writer;
+    }
+
+    public InputView() {
+        this(DEFAULT_READER, DEFAULT_WRITER);
     }
 
     public Map<String, Integer> purchaseProduct() {
@@ -37,6 +46,7 @@ public class InputView {
                         parts -> Integer.parseInt(parts[1])
                 ));
     }
+
 
 
 }
