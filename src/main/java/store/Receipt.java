@@ -48,12 +48,12 @@ public class Receipt {
                 System.out.printf("%s\t\t%d\t%,.0f\n", productName, quantity, totalCost)
         );
 
-        System.out.println("===========증정=============");
+        System.out.println("=============증\t정===============");
         bonusDetails.forEach((productName, quantity) ->
                 System.out.printf("%s\t\t%d\t증정\n", productName, quantity)
         );
 
-        System.out.println("==============================");
+        System.out.println("====================================");
         System.out.printf("총구매액\t\t%,.0f\n", totalCost);
         System.out.printf("행사할인\t\t\t-%,.0f\n", promoDiscount);
         System.out.printf("멤버십할인\t\t-%,.0f\n", membershipDiscountAmount);
