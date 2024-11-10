@@ -56,6 +56,14 @@ public class Promotion {
                 (today.isEqual(endDate) || today.isBefore(endDate));
     }
 
+    public int calculateBonusQuantity(int remainingQuantity) {
+        return type.calculateBonusQuantity(remainingQuantity);
+    }
+
+    public int calculatePromotionReduction(int remainingQuantity, int bonusQuantity) {
+        return type.calculatePromotionReduction(remainingQuantity, bonusQuantity);
+    }
+
 
 
 }

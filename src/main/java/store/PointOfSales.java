@@ -17,7 +17,7 @@ public class PointOfSales {
 
         return createResultMap(purchaseDetails, bonusDetails);
     }
-    
+
     private List<Integer> processProductPurchase(Product product, int requestedQuantity, InputView inputView) {
         int remainingQuantity = validateAndAdjustStock(product, requestedQuantity);
         remainingQuantity = handlePromotion(product, remainingQuantity, inputView);
