@@ -58,14 +58,32 @@ public class Product {
     public List<Integer> reduceStock(int requestedQuantity) {
         int remainingQuantity = requestedQuantity;
         int bonusQuantity = 0;
+
+        // 프로모션이 활성 상태일 경우에만 프로모션 적용
         if (isPromotionActive()) {
             bonusQuantity = applyPromotionDiscount(remainingQuantity);
             remainingQuantity -= calculatePromotionReduction(remainingQuantity, bonusQuantity);
+        } else {
+            // 프로모션이 비활성화된 경우, 동일한 이름의 일반 재고 상품으로 변경하여 결제
+            Product generalProduct = findGeneralProductByName(this.name);
+            if (generalProduct != null) {
+                remainingQuantity = generalProduct.reduceRegularStock(remainingQuantity);
+            } else {
+                remainingQuantity = reduceRegularStock(remainingQuantity);
+            }
         }
-        remainingQuantity = reduceRegularStock(remainingQuantity);
 
         int purchasedQuantity = requestedQuantity - remainingQuantity;
         return List.of(purchasedQuantity, bonusQuantity);
+    }
+
+
+    // 동일 이름의 일반 재고 상품을 찾는 메서드 추가
+    private Product findGeneralProductByName(String name) {
+        return Inventory.getProducts().stream()
+                .filter(product -> product.getName().equals(name) && !product.isPromotionActive() && product.getRegularStock() > 0)
+                .findFirst()
+                .orElse(null);
     }
 
 
@@ -85,7 +103,14 @@ public class Product {
     }
 
     private boolean isPromotionActive() {
-        return promotion != null && promotion.isActive() && promotionStock > 0;
+        boolean active = promotion != null && promotion.isActive() && promotionStock > 0;
+
+        if (!active) {
+            // 프로모션 비활성화 시 프로모션 재고 0으로 설정
+            promotionStock = 0;
+        }
+
+        return active;
     }
 
 

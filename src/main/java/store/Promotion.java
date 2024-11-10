@@ -11,6 +11,7 @@ public class Promotion {
     private LocalDate endDate;
     private int triggerQuantity;
     private int bonusQuantity;
+    private DateTimes dateTimes;
 
     public Promotion(PromotionType type, int triggerQuantity, int bonusQuantity, LocalDate startDate,
                      LocalDate endDate) {
@@ -50,8 +51,7 @@ public class Promotion {
 
     //해결하지 못함
     public boolean isActive() {
-        LocalDateTime datetime = DateTimes.now();
-        LocalDate today = LocalDate.now();
+        LocalDate today = DateTimes.now().toLocalDate(); // DateTimes.now()로 일관된 날짜 사용
         return (today.isEqual(startDate) || today.isAfter(startDate)) &&
                 (today.isEqual(endDate) || today.isBefore(endDate));
     }

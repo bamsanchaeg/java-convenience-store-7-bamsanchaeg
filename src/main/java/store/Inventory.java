@@ -49,7 +49,7 @@ public class Inventory {
         return product;
     }
 
-    public List<Product> getProducts() {
+    public static List<Product> getProducts() {
         return products;
     }
 
