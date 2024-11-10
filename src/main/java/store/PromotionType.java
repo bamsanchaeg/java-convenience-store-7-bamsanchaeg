@@ -17,4 +17,13 @@ public enum PromotionType {
     public String getDisplayName() {
         return displayName;
     }
+    
+    public static PromotionType fromString(String text) {
+        for (PromotionType b : PromotionType.values()) {
+            if (b.displayName.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null; // 찾지 못한 경우
+    }
 }
