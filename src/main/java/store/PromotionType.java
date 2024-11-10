@@ -17,7 +17,7 @@ public enum PromotionType {
     public String getDisplayName() {
         return displayName;
     }
-    
+
     public static PromotionType fromString(String text) {
         for (PromotionType b : PromotionType.values()) {
             if (b.displayName.equalsIgnoreCase(text)) {
