@@ -12,7 +12,7 @@ public class OutputView {
     public OutputView() {
         this(DEFAULT_WRITER);
     }
-    
+
     public OutputView(Writer writer) {
         this.writer = writer;
     }
