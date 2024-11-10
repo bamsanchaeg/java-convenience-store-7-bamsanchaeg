@@ -35,8 +35,16 @@ public class InputView {
 
     // 사용자 입력 확인 메서드
     public static boolean confirmUserInput() {
-        String response = Console.readLine().trim().toUpperCase();
-        return "Y".equals(response);
+        while (true) {
+            String response = Console.readLine().trim().toUpperCase();
+            if ("Y".equals(response)) {
+                return true;
+            }
+            if ("N".equals(response)) {
+                return false;
+            }
+            System.out.println("[ERROR] 잘못된 입력입니다. Y 또는 N으로 응답해 주세요.");
+        }
     }
 
     private Map<String, Integer> validateAndParsePurchaseRequest(String input) {
